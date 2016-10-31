@@ -7,7 +7,7 @@ package com.example.android.quakereport;
 public class Earthquake{
 
 
-    private double mMagnitude;
+    private String mMagnitude;
     private String mCity;
     private String mDate;
 
@@ -18,7 +18,7 @@ public class Earthquake{
      * @param date represents the date of earthquake
      */
 
-    public Earthquake(double magnitude, String city, String date){
+    public Earthquake(String magnitude, String city, String date){
         mMagnitude = magnitude;
         mCity = city;
         mDate = date;
@@ -28,7 +28,7 @@ public class Earthquake{
      * Returns the magnitude of the earthquake
      * @return
      */
-    public double getEarthquakeMagnitude(){
+    public String getEarthquakeMagnitude(){
         return mMagnitude;
     }
 

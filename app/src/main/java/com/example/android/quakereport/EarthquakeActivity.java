@@ -17,7 +17,6 @@ package com.example.android.quakereport;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -32,24 +31,45 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
 
         // Create a fake list of earthquake locations.
-        ArrayList<Earthquake> earthquakes = new ArrayList<Earthquake>();
-        earthquakes.add(new Earthquake(4.6, "Melbourne", "1 Jan 2016"));
-        earthquakes.add(new Earthquake(5.5, "Tokyo", "4 Jun 2016"));
-        earthquakes.add(new Earthquake(4.9, "Boston", "9 Dec 2016"));
-        earthquakes.add(new Earthquake(7.2, "Athens", "21 Aug 2016"));
-        earthquakes.add(new Earthquake(5.4, "New York", "15 Mar 2016"));
-        earthquakes.add(new Earthquake(4.8, "Gold Coast", "13 Oct 2016"));
-        earthquakes.add(new Earthquake(6.3, "Paris", "12 Feb 2016"));
+        /**
+         * This is why I could not just use earthquake.add(etc, etc etc,):
+         *
+         * Because that would mean that I am trying to add a new earthquake
+         * element to the array adapter without calling the constructor to create
+         * a new instance of that object.
+         * When what I needed to do was create a different
+         * instance of the Earthquake class for each element in the array list.
+         * That is why I am using the constructor new Earthquake(x, y, z) inside
+         * the add(parenthesis), and the add belongs to the ArrayList class.
+         */
+
+        // creates a new ArrayList of Earthquake data types
+        ArrayList<Earthquake> earthquakes = new ArrayList();
+        earthquakes.add(new Earthquake("4.6", "Melbourne", "1 Jan 2016"));
+        earthquakes.add(new Earthquake("5.5", "Tokyo", "4 Jun 2016"));
+        earthquakes.add(new Earthquake("4.9", "Boston", "9 Dec 2016"));
+        earthquakes.add(new Earthquake("7.2", "Athens", "21 Aug 2016"));
+        earthquakes.add(new Earthquake("5.4", "New York", "15 Mar 2016"));
+        earthquakes.add(new Earthquake("4.8", "Gold Coast", "13 Oct 2016"));
+        earthquakes.add(new Earthquake("6.3", "Paris", "12 Feb 2016"));
+        earthquakes.add(new Earthquake("4.6", "Melbourne", "1 Jan 2016"));
+        earthquakes.add(new Earthquake("5.5", "Tokyo", "4 Jun 2016"));
+        earthquakes.add(new Earthquake("4.9", "Boston", "9 Dec 2016"));
+        earthquakes.add(new Earthquake("7.2", "Athens", "21 Aug 2016"));
+        earthquakes.add(new Earthquake("5.4", "New York", "15 Mar 2016"));
+        earthquakes.add(new Earthquake("4.8", "Gold Coast", "13 Oct 2016"));
+        earthquakes.add(new Earthquake("6.3", "Paris", "12 Feb 2016"));
+
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-               this, android.R.layout.simple_list_item_1, earthquakes);
+        EarthquakeAdapter myAdapter = new EarthquakeAdapter(
+               this, earthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(adapter);
+        earthquakeListView.setAdapter(myAdapter);
     }
 }
