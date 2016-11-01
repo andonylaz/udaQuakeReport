@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static com.example.android.quakereport.R.id.date;
+import static com.example.android.quakereport.R.id.offset_location;
+import static com.example.android.quakereport.R.id.primary_location;
 
 /**
  * Created by monash on 10/31/2016.
@@ -40,8 +42,19 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView magnitude_text = (TextView)convertView.findViewById(R.id.magnitude);
         magnitude_text.setText(quake.getEarthquakeMagnitude());
 
-        TextView city_text = (TextView)convertView.findViewById(R.id.location);
-        city_text.setText(quake.getEarthquakeCity());
+        // Get the original location string from the Earthquake object,
+        // which can be in the format of "5km N of Cairo, Egypt" or "Pacific-Antarctic Ridge".
+        String originalLocation = quake.getEarthquakeLocation();
+
+        // Create array and initialise the contents by calling the formatLocations() helper method
+        String[] locationArray = formatLocations(originalLocation);
+
+        // find and set the first location text view
+        TextView primary_location_text = (TextView) convertView.findViewById(primary_location);
+        primary_location_text.setText(locationArray[1]);
+        // find and set the second location text view
+        TextView offset_location_text = (TextView) convertView.findViewById(offset_location);
+        offset_location_text.setText(locationArray[0]);
 
         // get the unix time value for that particular object
         long unixTime = quake.getEarthquakeTime();
@@ -86,5 +99,28 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
         String timeToDisplay = timeFormatter.format(dateObject);
         return timeToDisplay;
+    }
+
+    private String[] formatLocations(String locations) {
+
+        // declare array to return
+        String[] locationArray= {"", ""};
+
+        // declare format seperator
+        final String FORMAT_SEPARATOR = " of ";
+
+        // split string in two, and store in a string array
+        if (locations.contains(FORMAT_SEPARATOR)) {
+            // now offset-location is in index[0], primary location is in index[1]
+            locationArray = locations.split(FORMAT_SEPARATOR);
+            // add " of " after the offset location text
+            String temp = locationArray[0] + FORMAT_SEPARATOR;
+            locationArray[0] = temp;
+        } else {
+            locationArray[1] = locations;
+            locationArray[0] = getContext().getString(R.string.near_the);
+
+        }
+        return locationArray;
     }
 }

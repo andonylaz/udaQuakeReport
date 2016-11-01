@@ -8,19 +8,19 @@ public class Earthquake{
 
 
     private String mMagnitude;
-    private String mCity;
+    private String mLocation;
     private long mTimeInMilliseconds;
 
     /**
      *
      * @param magnitude represents the magnitude of earthquake
-     * @param city represents the city it occured in
+     * @param location represents the city it occured in
      * @param time represents the date of earthquake
      */
 
-    public Earthquake(String magnitude, String city, long time){
+    public Earthquake(String magnitude, String location, long time){
         mMagnitude = magnitude;
-        mCity = city;
+        mLocation = location;
         mTimeInMilliseconds = time;
     }
 
@@ -36,8 +36,8 @@ public class Earthquake{
      * returns the city hit by the earthquake
      * @return
      */
-    public String getEarthquakeCity(){
-        return mCity;
+    public String getEarthquakeLocation(){
+        return mLocation;
     }
 
 
