@@ -75,11 +75,10 @@ public final class QueryUtils {
                 // extract place for location
                 String location = propertiesObject.optString("place");
                 // extract time for time of quake
-                int time = propertiesObject.optInt("time");
-                String stringTime = Integer.toString(time);
+                long time = propertiesObject.optLong("time");
 
                 // create Earthquake java objects from magnitude, location, time data
-                earthquakes.add(new Earthquake(magnitude, location, stringTime));
+                earthquakes.add(new Earthquake(magnitude, location, time));
             }
 
         } catch (JSONException e) {

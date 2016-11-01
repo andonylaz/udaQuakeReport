@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:id="@+id/magnitude"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="16dp"
-        android:gravity="center_vertical" />
+        tools:text="8.9" />
 
     <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
         android:id="@+id/location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="16dp"
-        android:gravity="center_vertical"/>
+        tools:text="Melbourne, VIC"/>
 
     <TextView
+    android:id="@+id/date"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/date"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="16dp"
-        android:gravity="center_vertical"/>
+        tools:text="Mar 6, 2010"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="3:00 PM"/>
 
 </LinearLayout>

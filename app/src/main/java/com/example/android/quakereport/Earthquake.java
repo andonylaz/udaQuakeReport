@@ -9,19 +9,19 @@ public class Earthquake{
 
     private String mMagnitude;
     private String mCity;
-    private String mDate;
+    private long mTimeInMilliseconds;
 
     /**
      *
      * @param magnitude represents the magnitude of earthquake
      * @param city represents the city it occured in
-     * @param date represents the date of earthquake
+     * @param time represents the date of earthquake
      */
 
-    public Earthquake(String magnitude, String city, String date){
+    public Earthquake(String magnitude, String city, long time){
         mMagnitude = magnitude;
         mCity = city;
-        mDate = date;
+        mTimeInMilliseconds = time;
     }
 
     /**
@@ -40,11 +40,10 @@ public class Earthquake{
         return mCity;
     }
 
+
     /**
-     * returns the date the earthquake occured
+     * returns the time the earthquake occured
      * @return
      */
-    public String getEarthquakeDate(){
-        return mDate;
-    }
+    public long getEarthquakeTime() { return mTimeInMilliseconds;}
 }
