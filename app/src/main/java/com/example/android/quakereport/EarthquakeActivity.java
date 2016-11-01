@@ -35,7 +35,7 @@ public class EarthquakeActivity extends AppCompatActivity {
          * This is why I could not just use earthquake.add(etc, etc etc,):
          *
          * Because that would mean that I am trying to add a new earthquake
-         * element to the array adapter without calling the constructor to create
+         * element to the array list without calling the constructor to create
          * a new instance of that object.
          * When what I needed to do was create a different
          * instance of the Earthquake class for each element in the array list.
@@ -44,21 +44,7 @@ public class EarthquakeActivity extends AppCompatActivity {
          */
 
         // creates a new ArrayList of Earthquake data types
-        ArrayList<Earthquake> earthquakes = new ArrayList();
-        earthquakes.add(new Earthquake("4.6", "Melbourne", "1 Jan 2016"));
-        earthquakes.add(new Earthquake("5.5", "Tokyo", "4 Jun 2016"));
-        earthquakes.add(new Earthquake("4.9", "Boston", "9 Dec 2016"));
-        earthquakes.add(new Earthquake("7.2", "Athens", "21 Aug 2016"));
-        earthquakes.add(new Earthquake("5.4", "New York", "15 Mar 2016"));
-        earthquakes.add(new Earthquake("4.8", "Gold Coast", "13 Oct 2016"));
-        earthquakes.add(new Earthquake("6.3", "Paris", "12 Feb 2016"));
-        earthquakes.add(new Earthquake("4.6", "Melbourne", "1 Jan 2016"));
-        earthquakes.add(new Earthquake("5.5", "Tokyo", "4 Jun 2016"));
-        earthquakes.add(new Earthquake("4.9", "Boston", "9 Dec 2016"));
-        earthquakes.add(new Earthquake("7.2", "Athens", "21 Aug 2016"));
-        earthquakes.add(new Earthquake("5.4", "New York", "15 Mar 2016"));
-        earthquakes.add(new Earthquake("4.8", "Gold Coast", "13 Oct 2016"));
-        earthquakes.add(new Earthquake("6.3", "Paris", "12 Feb 2016"));
+        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
 
 
         // Find a reference to the {@link ListView} in the layout
