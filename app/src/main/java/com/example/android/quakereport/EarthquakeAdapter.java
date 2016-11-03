@@ -1,18 +1,22 @@
 package com.example.android.quakereport;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import static com.example.android.quakereport.R.id.date;
+import static com.example.android.quakereport.R.id.magnitude;
 import static com.example.android.quakereport.R.id.offset_location;
 import static com.example.android.quakereport.R.id.primary_location;
 
@@ -39,8 +43,12 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         }
 
         // Lookup view for data population
-        TextView magnitude_text = (TextView)convertView.findViewById(R.id.magnitude);
-        magnitude_text.setText(quake.getEarthquakeMagnitude());
+        TextView magnitude_text = (TextView)convertView.findViewById(magnitude);
+        // create instance of DoubleFormat with correct format ie (7.2, 5.1, etc)
+        DecimalFormat magnitudeFormatter = new DecimalFormat("0.0");
+        // format the earthquakes raw data value for magnitude using helper method
+        String magntitudToDisplay = formatMagnitude(quake.getEarthquakeMagnitude());
+        magnitude_text.setText(magntitudToDisplay);
 
         // Get the original location string from the Earthquake object,
         // which can be in the format of "5km N of Cairo, Egypt" or "Pacific-Antarctic Ridge".
@@ -76,8 +84,30 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         time_text.setText(timeToDisplay);
 
 
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle = (GradientDrawable) magnitude_text.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor(quake.getEarthquakeMagnitude());
+
+        // set the background with the correct color
+        magnitudeCircle.setColor(magnitudeColor);
         // return the completed view to render on screen
         return convertView;
+    }
+
+    /**
+     * Return the formatted magnitude string showing 1 decimal place (i.e. "3.2")
+     * from a decimal magnitude value.
+     */
+    private String formatMagnitude(double magnitude) {
+        // create instance of DoubleFormat with correct format ie (7.2, 5.1, etc)
+        DecimalFormat magnitudeFormatter = new DecimalFormat("0.0");
+        // format the earthquakes raw data value for magnitude
+        String magntitudToDisplay = magnitudeFormatter.format(magnitude);
+        // return proper formatted value
+        return magntitudToDisplay;
     }
 
 
@@ -101,6 +131,11 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         return timeToDisplay;
     }
 
+    /**
+     *
+     * @param locations entire string that is stored in Earthquake object
+     * @return array that contains pieces of the string in each index
+     */
     private String[] formatLocations(String locations) {
 
         // declare array to return
@@ -122,5 +157,39 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         }
         return locationArray;
+    }
+
+    private int getMagnitudeColor(double magnitude){
+
+        ContextCompat context = new ContextCompat();
+
+        int magnitudeValue = (int) magnitude;
+        switch (magnitudeValue){
+            case 1:
+                return ContextCompat.getColor(getContext(), R.color.magnitude1);
+            case 2:
+                return ContextCompat.getColor(getContext(), R.color.magnitude2);
+            case 3:
+                return ContextCompat.getColor(getContext(), R.color.magnitude3);
+            case 4:
+                return ContextCompat.getColor(getContext(), R.color.magnitude4);
+            case 5:
+                return ContextCompat.getColor(getContext(), R.color.magnitude5);
+            case 6:
+                return ContextCompat.getColor(getContext(), R.color.magnitude6);
+            case 7:
+                return ContextCompat.getColor(getContext(), R.color.magnitude7);
+            case 8:
+                return ContextCompat.getColor(getContext(), R.color.magnitude8);
+            case 9:
+                return ContextCompat.getColor(getContext(), R.color.magnitude9);
+            case 10:
+                return ContextCompat.getColor(getContext(), R.color.magnitude10plus);
+            default:
+                return ContextCompat.getColor(getContext(), R.color.magnitude10plus);
+
+
+        }
+
     }
 }
