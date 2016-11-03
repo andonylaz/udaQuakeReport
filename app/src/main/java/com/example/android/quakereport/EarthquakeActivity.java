@@ -15,8 +15,12 @@
  */
 package com.example.android.quakereport;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -44,18 +48,48 @@ public class EarthquakeActivity extends AppCompatActivity {
          */
 
         // creates a new ArrayList of Earthquake data types
-        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
 
 
         // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        final ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        EarthquakeAdapter myAdapter = new EarthquakeAdapter(
+        final EarthquakeAdapter myAdapter = new EarthquakeAdapter(
                this, earthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(myAdapter);
+
+        // set an onItemClickListener for the listView
+        // so when a user clicks on the ListView this happens:
+        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //parent	AdapterView: The AdapterView where the click happened.
+                //view	View: The view within the AdapterView that was clicked
+                // (this will be a view provided by the adapter)
+                //position	int: The position of the view in the adapter.
+                //id   long: The row id of the item that was clicked.
+
+                // Find the current earthquake that was clicked on
+                // we call the custom adapters getItem() method
+                Earthquake earthquakeSelected = myAdapter.getItem(position);
+                // get the url of that list item
+                String earthquakeUrl = earthquakeSelected.getEarthquakeUrl();
+
+                // open that url in a browser:
+                // create new Intent object and pass it the ACTION_VIEW constant this means the
+                // activity action will display data to the user.
+                Intent openUrl = new Intent(Intent.ACTION_VIEW);
+                // Set the data of the Intent to the URL but first we
+                // convert the string URL into a URI object
+                openUrl.setData(Uri.parse(earthquakeUrl));
+                // start a new activity with the intent, so that a web browser app on the
+                // device will handle the intent and display the website for that earthquake.
+                startActivity(openUrl);
+            }
+        });
     }
 }

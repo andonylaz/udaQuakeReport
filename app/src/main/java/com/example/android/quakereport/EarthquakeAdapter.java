@@ -94,6 +94,8 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         // set the background with the correct color
         magnitudeCircle.setColor(magnitudeColor);
         // return the completed view to render on screen
+
+
         return convertView;
     }
 

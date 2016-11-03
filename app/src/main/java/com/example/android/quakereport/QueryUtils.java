@@ -76,9 +76,11 @@ public final class QueryUtils {
                 String location = propertiesObject.optString("place");
                 // extract time for time of quake
                 long time = propertiesObject.optLong("time");
+                // extract url for the UGSG website link
+                String url = propertiesObject.optString("url");
 
                 // create Earthquake java objects from magnitude, location, time data
-                earthquakes.add(new Earthquake(magnitude, location, time));
+                earthquakes.add(new Earthquake(magnitude, location, time, url));
             }
 
         } catch (JSONException e) {
