@@ -17,6 +17,7 @@ package com.example.android.quakereport;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,14 +28,15 @@ import java.util.ArrayList;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
-    public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    //public static final String LOG_TAG = EarthquakeActivity.class.getName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
+        // Create a fake list of earthquake locations. --- OLD CODE BUT GOOD REFERENCE
         /**
          * This is why I could not just use earthquake.add(etc, etc etc,):
          *
@@ -47,8 +49,42 @@ public class EarthquakeActivity extends AppCompatActivity {
          * the add(parenthesis), and the add belongs to the ArrayList class.
          */
 
+        // create new instance of EarthquakeAsyncClass
+        EarthquakeAsyncTask earthquakeTask = new EarthquakeAsyncTask();
+        earthquakeTask.execute();
+
+    }
+
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, ArrayList>{
+        @Override
+        protected void onPostExecute(ArrayList arrayList) {
+            // update the list of earthquakes
+            updateEarthquakeList(arrayList);
+        }
+
+        @Override
+        protected ArrayList doInBackground(String... params) {
+
+            try {// open the connection and retrieve the data
+                ArrayList<Earthquake> recentEarthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
+                // return the list to postExecute method
+                return recentEarthquakes;
+            } catch (Exception e){
+                e.printStackTrace();
+
+            }
+
+            // return the list to postExecute method
+            return null;
+
+
+        }
+    }
+
+    private void updateEarthquakeList(ArrayList earthquakes){
+
         // creates a new ArrayList of Earthquake data types
-        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        ArrayList<Earthquake> recentEarthquakes = new ArrayList<>(earthquakes);
 
 
         // Find a reference to the {@link ListView} in the layout
@@ -56,7 +92,7 @@ public class EarthquakeActivity extends AppCompatActivity {
 
         // Create a new {@link ArrayAdapter} of earthquakes
         final EarthquakeAdapter myAdapter = new EarthquakeAdapter(
-               this, earthquakes);
+                this, recentEarthquakes);
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
