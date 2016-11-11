@@ -203,6 +203,7 @@ public final class QueryUtils {
      * Query the USGS dataset and return a list of {@link Earthquake} objects.
      */
     public static final ArrayList<Earthquake> fetchEarthquakeData(String requestUrl) {
+        Log.e(LOG_TAG, "inside fetchEarthquakeData() method");
         // Create URL object
         URL url = createURL(requestUrl);
 

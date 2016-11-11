@@ -15,20 +15,32 @@
  */
 package com.example.android.quakereport;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class EarthquakeActivity extends AppCompatActivity {
+public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Earthquake>> {
 
-    //public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    private EarthquakeAdapter myAdapter;
+    private ListView mEarthquakeListView;
+
+    /**
+     * Constant value for the earthquake loader ID. We can choose any integer.
+     * This really only comes into play if you're using multiple loaders.
+     */
+    private static final int EARTHQUAKE_LOADER_ID = 1;
+
 
 
     @Override
@@ -36,71 +48,84 @@ public class EarthquakeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations. --- OLD CODE BUT GOOD REFERENCE
-        /**
-         * This is why I could not just use earthquake.add(etc, etc etc,):
-         *
-         * Because that would mean that I am trying to add a new earthquake
-         * element to the array list without calling the constructor to create
-         * a new instance of that object.
-         * When what I needed to do was create a different
-         * instance of the Earthquake class for each element in the array list.
-         * That is why I am using the constructor new Earthquake(x, y, z) inside
-         * the add(parenthesis), and the add belongs to the ArrayList class.
-         */
+        ArrayList<Earthquake> dummyData = new ArrayList<>();
 
-        // create new instance of EarthquakeAsyncClass
-        EarthquakeAsyncTask earthquakeTask = new EarthquakeAsyncTask();
-        earthquakeTask.execute();
+        // Create a new {@link ArrayAdapter} of earthquakes
+        myAdapter = new EarthquakeAdapter(this, dummyData);
+        mEarthquakeListView = (ListView) findViewById(R.id.list);
 
+        // Get a reference to the LoaderManager, in order to interact with loaders.
+        LoaderManager loaderManager = getLoaderManager();
+
+
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        Log.e(LOG_TAG, "Initialised loader");
     }
 
-    private class EarthquakeAsyncTask extends AsyncTask<String, Void, ArrayList>{
-        @Override
-        protected void onPostExecute(ArrayList arrayList) {
-            // update the list of earthquakes
-            updateEarthquakeList(arrayList);
+
+
+    @Override
+    public Loader<ArrayList<Earthquake>> onCreateLoader(int id, Bundle args) {
+        // Create a new loader for the given URL
+        Log.e(LOG_TAG, "Called onCreateLoader");
+        return new EarthquakeLoader(this, QueryUtils.USGS_URL);
+    }
+
+    /** This method is automatically called once the loadInBackground() completes pasing
+     * the those parameters
+     *
+     * @param loader the instance of the loader that was used
+     * @param data an ArrayList that contains recent Earthquake data
+     */
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Earthquake>> loader, ArrayList<Earthquake> data) {
+
+        Log.e(LOG_TAG, "In onLoadFinished() method");
+        // update the list of earthquakes
+        updateEarthquakeList(data);
+
+        // Clear the adapter of previous earthquake data
+        if (data != null) {
+            myAdapter.clear();
+        }
+        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
+        // data set. This will trigger the ListView to update.
+        if (data != null && !data.isEmpty()) {
+            myAdapter.addAll(data);
         }
 
-        @Override
-        protected ArrayList doInBackground(String... params) {
+        // get a reference for the empty view
+        TextView emptyView = (TextView) findViewById(R.id.no_data_available);
+        //Set the empty state text view onto the list view
+        mEarthquakeListView.setEmptyView(emptyView);
+    }
 
-            try {// open the connection and retrieve the data
-                ArrayList<Earthquake> recentEarthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
-                // return the list to postExecute method
-                return recentEarthquakes;
-            } catch (Exception e){
-                e.printStackTrace();
+    @Override
+    public void onLoaderReset(Loader<ArrayList<Earthquake>> loader) {
 
-            }
-
-            // return the list to postExecute method
-            return null;
-
-
+        if (loader != null) {
+            myAdapter.clear();
         }
+        Log.e(LOG_TAG, "In onLoaderReset() method");
     }
 
     private void updateEarthquakeList(ArrayList earthquakes){
 
-        // creates a new ArrayList of Earthquake data types
-        ArrayList<Earthquake> recentEarthquakes = new ArrayList<>(earthquakes);
-
-
-        // Find a reference to the {@link ListView} in the layout
-        final ListView earthquakeListView = (ListView) findViewById(R.id.list);
-
-        // Create a new {@link ArrayAdapter} of earthquakes
-        final EarthquakeAdapter myAdapter = new EarthquakeAdapter(
-                this, recentEarthquakes);
+        // if there is not list of objects
+        if (earthquakes == null){
+            return;
+        }
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(myAdapter);
+        mEarthquakeListView.setAdapter(myAdapter);
 
         // set an onItemClickListener for the listView
         // so when a user clicks on the ListView this happens:
-        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mEarthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //parent	AdapterView: The AdapterView where the click happened.
@@ -128,4 +153,5 @@ public class EarthquakeActivity extends AppCompatActivity {
             }
         });
     }
+
 }
