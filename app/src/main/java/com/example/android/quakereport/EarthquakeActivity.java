@@ -25,9 +25,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class EarthquakeActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Earthquake>> {
 
@@ -52,7 +56,15 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
         // Create a new {@link ArrayAdapter} of earthquakes
         myAdapter = new EarthquakeAdapter(this, dummyData);
+
         mEarthquakeListView = (ListView) findViewById(R.id.list);
+
+        // hide the list view to show the ProgressBar
+        // mEarthquakeListView.setVisibility(View.INVISIBLE);
+
+        // get reference to and then hide the progress bar
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setVisibility(VISIBLE);
 
         // Get a reference to the LoaderManager, in order to interact with loaders.
         LoaderManager loaderManager = getLoaderManager();
@@ -83,6 +95,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onLoadFinished(Loader<ArrayList<Earthquake>> loader, ArrayList<Earthquake> data) {
 
+        // get reference to and then hide the progress bar
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setVisibility(GONE);
+
+
+
         Log.e(LOG_TAG, "In onLoadFinished() method");
         // update the list of earthquakes
         updateEarthquakeList(data);
@@ -94,11 +112,12 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
         if (data != null && !data.isEmpty()) {
-            myAdapter.addAll(data);
+            //myAdapter.addAll(data);
         }
 
         // get a reference for the empty view
         TextView emptyView = (TextView) findViewById(R.id.no_data_available);
+        emptyView.setText(R.string.unavilable_data);
         //Set the empty state text view onto the list view
         mEarthquakeListView.setEmptyView(emptyView);
     }

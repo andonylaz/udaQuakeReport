@@ -40,6 +40,7 @@ public class EarthquakeLoader extends AsyncTaskLoader<ArrayList<Earthquake>>{
     @Override
     public ArrayList<Earthquake> loadInBackground() {
 
+        // return if a null URL was passed
         if (mUrl == null) {
             return null;
         }
