@@ -32,6 +32,9 @@ public final class QueryUtils {
     /**JSON response for a USGS query */
     private static String JSON_RESPONSE;
 
+    // the edited url query that can be edited by the user
+    public static String NEW_USGS_QUERY;
+
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     /**
@@ -207,7 +210,7 @@ public final class QueryUtils {
         // we are putting the thread calling this function "to sleep" for 2 seconds
         // this simulates a slow internet connection
         try {
-            Thread.sleep(2000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

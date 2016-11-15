@@ -47,7 +47,7 @@ public class EarthquakeLoader extends AsyncTaskLoader<ArrayList<Earthquake>>{
         Log.e(LOG_TAG, "In the loadInBackground() method");
 
         try {// open the connection and retrieve the data
-            ArrayList<Earthquake> recentEarthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.USGS_URL);
+            ArrayList<Earthquake> recentEarthquakes = QueryUtils.fetchEarthquakeData(QueryUtils.NEW_USGS_QUERY);
             // return the list to postExecute method
             return recentEarthquakes;
         } catch (Exception e){
